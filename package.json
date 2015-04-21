@@ -1,0 +1,22 @@
+{
+  "name": "jsonld-service",
+  "version": "1.0.0",
+  "description": "A pattern for building JSON-LD and Hydra services",
+  "main": "service.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "immutable": "^3.7.2",
+    "jsonld": "^0.3.22",
+    "lodash": "^3.7.0",
+    "q": "^1.2.0",
+    "rdfstore": "^0.9.5",
+    "stream-string": "^1.0.1"
+  },
+  "devDependencies": {
+    "babel": "^5.1.10"
+  }
+}

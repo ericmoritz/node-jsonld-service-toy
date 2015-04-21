@@ -1,0 +1,79 @@
+{
+ "operation": [
+  {
+   "method": "DELETE",
+   "@type": "DeleteResourceOperation"
+  }
+ ],
+ "@id": "2.json",
+ "@type": "BookmarkAction",
+ "object": {
+  "url": "http://hydra-cg.org/",
+  "name": "Hydra CG"
+ },
+ "agent": {
+  "operation": [
+   {
+    "method": "DELETE",
+    "@type": "DeleteResourceOperation"
+   }
+  ],
+  "@id": "../users/1.json",
+  "name": "Eric Moritz",
+  "@type": "Person"
+ },
+ "bookmarkIndex": {
+  "@id": "index.json"
+ },
+ "bookmarkCreate": {
+  "operation": [
+   {
+    "returns": "BookmarkCreated",
+    "method": "POST",
+    "@type": "CreateResourceOperation"
+   }
+  ],
+  "@id": "created.json"
+ },
+ "@context": {
+  "method": "hydra:method",
+  "schema": "http://schema.org/",
+  "hydra": "http://www.w3.org/ns/hydra/core#",
+  "returns": "hydra:returns",
+  "domain": {
+   "@id": "rdfs:domain",
+   "@type": "@id"
+  },
+  "owl": "http://www.w3.org/2002/07/owl#",
+  "agent": "schema:agent",
+  "unionOf": {
+   "@id": "owl:unionOf",
+   "@type": "@id"
+  },
+  "userCreate": "bm:userCreate",
+  "operation": "hydra:operation",
+  "supportedClass": "hydra:supportedClass",
+  "bm": "http://www.example.org/bookmarks#",
+  "name": "schema:name",
+  "BookmarkAction": "schema:BookmarkAction",
+  "Resource": "hydra:Resource",
+  "DeleteResourceOperation": "hydra:DeleteResourceOperation",
+  "url": "schema:url",
+  "BookmarkCreated": "bm:BookmarkCreated",
+  "bookmarkCreate": "bm:bookmarkCreate",
+  "bookmarkShow": "bm:bookmarkShow",
+  "label": "rdfs:label",
+  "Person": "schema:Person",
+  "Link": "hydra:Link",
+  "bookmarkIndex": "bm:bookmarkIndex",
+  "UserCreated": "bm:UserCreated",
+  "range": {
+   "@id": "rdfs:range",
+   "@type": "@id"
+  },
+  "CreateResourceOperation": "hydra:CreateResourceOperation",
+  "comment": "rdfs:comment",
+  "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+  "object": "schema:object"
+ }
+}
