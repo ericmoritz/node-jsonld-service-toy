@@ -92,15 +92,23 @@ const bookmarkCreated = Resources.BookmarkCreated(
 )
 const bookmarkListShown = Resources.BookmarkListShown({'@id': 'index.json'}, bookmarks)
 const bookmarkShownResources = bookmarks.map(Resources.BookmarkShown)
+const relativeTo = (path, fn) => (
+  // This could be better
+  (path.indexOf("/") > 0 ? "../" : "") + fn
+)
+
 const writeJsonLD = (path, map) => writeJson(
   path,
-  map.merge(Context)
+  map.merge({
+    '@context': relativeTo(path, "context.json")
+  })
 )
 
 Q.all([
   mkdir('users'),
   mkdir('bookmarks')
 ]).all([
+  writeJson("context.json", Context),
   writeJsonLD("vocab.json", Resources.Vocab()),
   writeJsonLD("index.json", index),
   writeJsonLD("users/created.json", userCreated),
