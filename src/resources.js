@@ -49,8 +49,11 @@ const ResourceBases = {
 // Posibile links that can be used within different resources
 const Links = {
   userCreate: ResourceBases.UserCreated,
+
   bookmarkCreate: ResourceBases.BookmarkCreated,
+
   bookmarkIndex: im({}),
+
   bookmarkShow: (bookmark) => (
     ResourceBases.BookmarkShown.merge(
       im(bookmark)
@@ -61,7 +64,11 @@ const Links = {
 // Exposted resources
 const Resources = {
   Context: () => constants.CONTEXT,
+
+
   Vocab: () => constants.VOCAB,
+
+
   Index: (x) => resource(
     undefined,
     im({
@@ -69,6 +76,7 @@ const Resources = {
     }),
     x
   ),
+
 
   UserCreated: (x) => resource(
     ResourceBases.UserCreated,
@@ -108,6 +116,7 @@ const Resources = {
     }),
     bookmark
   ),
+
 
   UserShown: (x) => resource(
     ResourceBases.UserShown,
