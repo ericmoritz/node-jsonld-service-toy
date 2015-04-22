@@ -3,6 +3,7 @@
 const _ = require('lodash');
 const Immutable = require('immutable')
 const Map = Immutable.Map
+const im = Immutable.fromJS
 
 const DELETE = {
   'method': 'DELETE',
@@ -17,30 +18,33 @@ const POST = (x) => x.merge(
 )
 
 
+function resource(base=Map(), links=Map(), overlay=Map()) {
+  return base.mergeDeep(links).mergeDeep(overlay)
+}
 
 const ResourceBases = {
-  UserCreated: Map({
+  UserCreated: im({
     'operation': [
       POST(
-        Map({
+        im({
           'returns': 'UserCreated'
         })
       )
     ]
   }), 
-  BookmarkCreated: Map({
+  BookmarkCreated: im({
     'operation': [
       POST(
-        Map({
+        im({
           'returns': 'BookmarkCreated'
         })
       )
     ]
   }),
-  BookmarkShown: Map({
+  BookmarkShown: im({
       'operation': [DELETE]
   }),
-  UserShown: Map({
+  UserShown: im({
       'operation':[DELETE]
   })
 }
@@ -48,10 +52,10 @@ const ResourceBases = {
 const Links = {
   userCreate: ResourceBases.UserCreated,
   bookmarkCreate: ResourceBases.BookmarkCreated,
-  bookmarkIndex: Map(),
+  bookmarkIndex: im({}),
   bookmarkShow: (bookmark) => (
     ResourceBases.BookmarkShown.merge(
-      Map(bookmark)
+      im(bookmark)
     )
   )
 }
@@ -61,7 +65,7 @@ function trace(x) {
 }
 
 const Resources = {
-  Context: () => Map({
+  Context: () => im({
     '@context': {
 
       // owl:
@@ -104,7 +108,7 @@ const Resources = {
       'name': 'schema:name',
     }
   }),
-  Vocab: () => Map({
+  Vocab: () => im({
     'supportedClass': [
       {
         '@id': 'bm:Init',
@@ -196,79 +200,60 @@ const Resources = {
   }),
 
 
-  Index: (x) => {
-    const xMap = Map(x);
-    return xMap.merge(
-      Map({
-        'userCreate': Links.userCreate.merge(
-          xMap.get('userCreate')
-        )
-      })
-    )
-  },
+  Index: (x) => resource(
+    undefined,
+    im({
+      'userCreate': Links.userCreate
+    }),
+    x
+  ),
+
+  
+  UserCreated: (x) => resource(
+    ResourceBases.UserCreated,
+    im({
+      'bookmarkIndex': Links.bookmarkIndex,
+      'bookmarkCreate': Links.bookmarkCreate
+    }),
+    x
+  ),
+
+  BookmarkCreated: (x) => resource(
+    ResourceBases.BookmarkCreated,
+    im({
+      'bookmarkIndex': Links.bookmarkIndex
+    }),
+    x
+  ),
 
 
-  UserCreated: (x) => {
-    const xMap = Map(x)
-    return ResourceBases.UserCreated.merge(
-      xMap
-    ).merge(
-      Map({
-        'bookmarkIndex': Links.bookmarkIndex.merge(
-          xMap.get('bookmarkIndex')
-        ),
-        'bookmarkCreate': Links.bookmarkCreate.merge(
-          xMap.get('bookmarkCreate')
-        )
-      })
-    )
-  },
-
-  BookmarkCreated: (x) => {
-    const xMap = Map(x)
-    return xMap.merge(
-      Map({
-        'bookmarkIndex': Links.bookmarkIndex.merge(
-          xMap.get('bookmarkIndex')
-        )
-      })
-    )
-  },
-
-  BookmarkListShown: (x, bookmarks) => {
-    const xMap = Map(x)
-    return xMap.merge(
-      Map({
+  BookmarkListShown: (x, bookmarks) => resource(
+    ResourceBases.BookmarkListShown,
+    im({
         'bookmarkShow': _.map(bookmarks || [], Links.bookmarkShow),
-        'bookmarkCreate': Links.bookmarkCreate.merge(
-          xMap.get('bookmarkCreate')
-        )
-      })
-    )
-  },
-  BookmarkShown: (bookmark) => {
-    const bookmarkMap = Map(bookmark)
-    return ResourceBases.BookmarkShown.merge(
-      bookmarkMap
-    ).merge(
-      Map({
-        'agent': ResourceBases.UserShown.merge(
-          bookmarkMap.get('agent')
-        ),
-        'bookmarkIndex': Links.bookmarkIndex.merge(
-          bookmarkMap.get('bookmarkIndex')
-        ),
-        'bookmarkCreate': Links.bookmarkCreate.merge(
-          bookmarkMap.get('bookmarkCreate')
-        )
-      })
-    )
-  },
-  UserShown: (x) => (
-    ResourceBases.UserShown.merge(
-      Map(x)
-    )
+        'bookmarkCreate': Links.bookmarkCreate
+    }),
+    x
+  ),
+
+
+  
+  BookmarkShown: (bookmark) => resource(
+    ResourceBases.BookmarkShown,
+    im({
+      'agent': ResourceBases.UserShown,
+      'bookmarkIndex': Links.bookmarkIndex,
+      'bookmarkCreate': Links.bookmarkCreate
+    }),
+    bookmark
+  ),
+
+  UserShown: (x) => resource(
+    ResourceBases.UserShown,
+    undefined,
+    x
   )
+
 }
   
 module.exports = Resources;

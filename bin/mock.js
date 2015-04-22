@@ -2,8 +2,7 @@ const _ = require('lodash')
 const fs = require('fs')
 const Q = require('q')
 const immutable = require('immutable')
-const Map = immutable.Map
-const List = immutable.List
+const im = immutable.fromJS
 const Resources = require('../src/resources.js')
 const outPath = process.argv[2]
 const json = x => JSON.stringify(x, null, ' ')
@@ -13,7 +12,7 @@ const writeJson = (fn, data) => {
   return Q.nfcall(fs.writeFile, outFn, json(data))
 }
 const mkdir = fn => Q.nfcall(fs.mkdir, outPath + fn)
-const user = Map(
+const user = im(
   {
     '@id': '1.json', 'name': 'Eric Moritz',
     '@type': 'Person'
@@ -60,8 +59,8 @@ const trace = (x) => {
   return x
 }
 const Context = Resources.Context().update( '@context', context => (
-  Map(context).merge(
-    Map({
+  im(context).merge(
+    im({
       'BookmarkAction': 'schema:BookmarkAction',
       'Person': 'schema:Person'
     })
@@ -69,26 +68,26 @@ const Context = Resources.Context().update( '@context', context => (
 ))
 
 const index = Resources.Index(
-  {
+  im({
     '@id': 'index.json',
     'userCreate': {'@id': 'users/created.json'}
-  }
+  })
 )
 
 const userCreated = Resources.UserCreated(
-  {
+  im({
     '@id': 'created.json',
     'bookmarkCreate': {'@id': '../bookmarks/created.json'},
     'bookmarkIndex': {'@id': '../bookmarks/index.json'}
-  }
+  })
 )
 
 const userResource = Resources.UserShown(user)
 const bookmarkCreated = Resources.BookmarkCreated(
-  {
+  im({
     '@id': 'created.json',
     'bookmarkIndex': {'@id': 'index.json'}
-  }
+  })
 )
 const bookmarkListShown = Resources.BookmarkListShown({'@id': 'index.json'}, bookmarks)
 const bookmarkShownResources = bookmarks.map(Resources.BookmarkShown)
@@ -99,9 +98,9 @@ const relativeTo = (path, fn) => (
 
 const writeJsonLD = (path, map) => writeJson(
   path,
-  map.merge({
+  map.merge(im({
     '@context': relativeTo(path, "context.json")
-  })
+  }))
 )
 
 Q.all([

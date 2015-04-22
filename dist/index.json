@@ -1,5 +1,4 @@
 {
- "@id": "index.json",
  "userCreate": {
   "operation": [
    {
@@ -10,5 +9,6 @@
   ],
   "@id": "users/created.json"
  },
+ "@id": "index.json",
  "@context": "context.json"
 }

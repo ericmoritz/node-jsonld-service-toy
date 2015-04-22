@@ -5,12 +5,6 @@
    "@type": "DeleteResourceOperation"
   }
  ],
- "@id": "3.json",
- "@type": "BookmarkAction",
- "object": {
-  "url": "http://json-ld.org/",
-  "name": "JSON-LD"
- },
  "agent": {
   "operation": [
    {
@@ -34,6 +28,12 @@
    }
   ],
   "@id": "created.json"
+ },
+ "@id": "3.json",
+ "@type": "BookmarkAction",
+ "object": {
+  "url": "http://json-ld.org/",
+  "name": "JSON-LD"
  },
  "@context": "../context.json"
 }

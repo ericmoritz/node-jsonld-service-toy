@@ -5,12 +5,6 @@
    "@type": "DeleteResourceOperation"
   }
  ],
- "@id": "1.json",
- "@type": "BookmarkAction",
- "object": {
-  "url": "http://www.programmableweb.com/news/hypermedia-apis-benefits-hateoas/how-to/2014/02/27",
-  "name": "Hypermedia APIs: The Benefits of HATEOAS"
- },
  "agent": {
   "operation": [
    {
@@ -34,6 +28,12 @@
    }
   ],
   "@id": "created.json"
+ },
+ "@id": "1.json",
+ "@type": "BookmarkAction",
+ "object": {
+  "url": "http://www.programmableweb.com/news/hypermedia-apis-benefits-hateoas/how-to/2014/02/27",
+  "name": "Hypermedia APIs: The Benefits of HATEOAS"
  },
  "@context": "../context.json"
 }

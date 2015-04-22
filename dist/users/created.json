@@ -6,7 +6,9 @@
    "@type": "CreateResourceOperation"
   }
  ],
- "@id": "created.json",
+ "bookmarkIndex": {
+  "@id": "../bookmarks/index.json"
+ },
  "bookmarkCreate": {
   "operation": [
    {
@@ -17,8 +19,6 @@
   ],
   "@id": "../bookmarks/created.json"
  },
- "bookmarkIndex": {
-  "@id": "../bookmarks/index.json"
- },
+ "@id": "created.json",
  "@context": "../context.json"
 }

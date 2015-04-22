@@ -5,12 +5,6 @@
    "@type": "DeleteResourceOperation"
   }
  ],
- "@id": "2.json",
- "@type": "BookmarkAction",
- "object": {
-  "url": "http://hydra-cg.org/",
-  "name": "Hydra CG"
- },
  "agent": {
   "operation": [
    {
@@ -34,6 +28,12 @@
    }
   ],
   "@id": "created.json"
+ },
+ "@id": "2.json",
+ "@type": "BookmarkAction",
+ "object": {
+  "url": "http://hydra-cg.org/",
+  "name": "Hydra CG"
  },
  "@context": "../context.json"
 }

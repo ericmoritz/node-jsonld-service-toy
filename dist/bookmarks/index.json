@@ -1,5 +1,4 @@
 {
- "@id": "index.json",
  "bookmarkShow": [
   {
    "operation": [
@@ -86,5 +85,6 @@
    }
   ]
  },
+ "@id": "index.json",
  "@context": "../context.json"
 }

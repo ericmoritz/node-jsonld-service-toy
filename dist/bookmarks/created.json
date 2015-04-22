@@ -1,7 +1,14 @@
 {
- "@id": "created.json",
+ "operation": [
+  {
+   "returns": "BookmarkCreated",
+   "method": "POST",
+   "@type": "CreateResourceOperation"
+  }
+ ],
  "bookmarkIndex": {
   "@id": "index.json"
  },
+ "@id": "created.json",
  "@context": "../context.json"
 }
