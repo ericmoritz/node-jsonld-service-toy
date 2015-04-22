@@ -1,11 +1,9 @@
 {
- "operation": [
-  {
-   "returns": "BookmarkCreated",
-   "method": "POST",
-   "@type": "CreateResourceOperation"
-  }
- ],
+ "operation": {
+  "method": "POST",
+  "@type": "CreateResourceOperation",
+  "returns": "BookmarkCreated"
+ },
  "bookmarkIndex": {
   "@id": "index.json"
  },

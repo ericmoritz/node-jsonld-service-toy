@@ -5,122 +5,105 @@ const Immutable = require('immutable')
 const Map = Immutable.Map
 const im = Immutable.fromJS
 const constants = require('./constants')
-const hydraUtils = require('./hydra-utils')
-const resource = hydraUtils.resource
-const POST = hydraUtils.POST
-const DELETE = hydraUtils.DELETE
+const hydra = require('./hydra-utils')
+const operation = hydra.operation;
+const link = hydra.link;
+const resource = hydra.resource;
+const trace = require('./trace')
+
 
 // What resources look like as links or full resources
 
 const ResourceBases = {
-  UserCreated: im({
-    'operation': [
-      POST(
-        im({
-          'returns': 'UserCreated'
-        })
-      )
-    ]
-  }), 
+  UserCreated: resource(
+    operation.POST({
+      'returns': 'UserCreated'
+    })
+  ),
 
+  BookmarkCreated: resource(
+    operation.POST({
+      'returns': 'BookmarkCreated'
+    })
+  ), 
 
-  BookmarkCreated: im({
-    'operation': [
-      POST(
-        im({
-          'returns': 'BookmarkCreated'
-        })
-      )
-    ]
-  }),
+  BookmarkShown: resource(
+    operation.DELETE()
+  ),
 
-
-  BookmarkShown: im({
-      'operation': [DELETE]
-  }),
-
-
-  UserShown: im({
-      'operation':[DELETE]
-  })
+  UserShown: resource(
+    link.union(
+      operation.PUT({
+        'returns': 'UserCreated'
+      }),
+      operation.DELETE()
+    )
+  )
 }
                                                                                
 
 // Posibile links that can be used within different resources
 const Links = {
-  userCreate: ResourceBases.UserCreated,
+  userCreate: link('userCreate', ResourceBases.UserCreated),
 
-  bookmarkCreate: ResourceBases.BookmarkCreated,
+  bookmarkCreate: link('bookmarkCreate', ResourceBases.BookmarkCreated),
 
-  bookmarkIndex: im({}),
+  bookmarkIndex: link('bookmarkIndex', resource()),
 
-  bookmarkShow: (bookmark) => (
-    ResourceBases.BookmarkShown.merge(
-      im(bookmark)
+  bookmarkShow: (bookmarks) => link(
+    'bookmarkShow',
+    bookmarks.map(
+      b => resource(ResourceBases.BookmarkShown, b)
     )
   )
 }
+
 
 // Exposted resources
 const Resources = {
   Context: () => constants.CONTEXT,
 
-
   Vocab: () => constants.VOCAB,
 
 
   Index: (x) => resource(
-    undefined,
-    im({
-      'userCreate': Links.userCreate
-    }),
+    Links.userCreate,
     x
   ),
 
 
   UserCreated: (x) => resource(
     ResourceBases.UserCreated,
-    im({
-      'bookmarkIndex': Links.bookmarkIndex,
-      'bookmarkCreate': Links.bookmarkCreate
-    }),
+    Links.bookmarkIndex,
+    Links.bookmarkCreate,
     x
   ),
 
-
   BookmarkCreated: (x) => resource(
     ResourceBases.BookmarkCreated,
-    im({
-      'bookmarkIndex': Links.bookmarkIndex
-    }),
+    Links.bookmarkIndex,
     x
   ),
 
 
   BookmarkListShown: (x, bookmarks) => resource(
     ResourceBases.BookmarkListShown,
-    im({
-        'bookmarkShow': _.map(bookmarks || [], Links.bookmarkShow),
-        'bookmarkCreate': Links.bookmarkCreate
-    }),
-    x
+    Links.bookmarkCreate,
+    Links.bookmarkShow(bookmarks)
   ),
 
   
   BookmarkShown: (bookmark) => resource(
     ResourceBases.BookmarkShown,
-    im({
-      'agent': ResourceBases.UserShown,
-      'bookmarkIndex': Links.bookmarkIndex,
-      'bookmarkCreate': Links.bookmarkCreate
-    }),
+    link('agent', ResourceBases.UserShown),
+    Links.bookmarkIndex,
+    Links.bookmarkCreate,
     bookmark
   ),
 
 
   UserShown: (x) => resource(
     ResourceBases.UserShown,
-    undefined,
     x
   )
 

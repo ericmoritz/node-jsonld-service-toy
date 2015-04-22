@@ -1,12 +1,10 @@
 {
  "userCreate": {
-  "operation": [
-   {
-    "returns": "UserCreated",
-    "method": "POST",
-    "@type": "CreateResourceOperation"
-   }
-  ],
+  "operation": {
+   "method": "POST",
+   "@type": "CreateResourceOperation",
+   "returns": "UserCreated"
+  },
   "@id": "users/created.json"
  },
  "@id": "index.json",

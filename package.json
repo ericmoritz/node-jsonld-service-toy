@@ -4,7 +4,7 @@
   "description": "A pattern for building JSON-LD and Hydra services",
   "main": "service.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --compilers js:babel/register"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +17,8 @@
     "stream-string": "^1.0.1"
   },
   "devDependencies": {
-    "babel": "^5.1.10"
+    "babel": "^5.1.10",
+    "expect": "^1.6.0",
+    "mocha": "^2.2.4"
   }
 }

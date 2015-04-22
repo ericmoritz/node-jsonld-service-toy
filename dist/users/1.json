@@ -1,6 +1,11 @@
 {
  "operation": [
   {
+   "method": "PUT",
+   "@type": "ReplaceResourceOperation",
+   "returns": "UserCreated"
+  },
+  {
    "method": "DELETE",
    "@type": "DeleteResourceOperation"
   }

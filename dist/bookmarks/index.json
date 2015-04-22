@@ -1,12 +1,17 @@
 {
+ "bookmarkCreate": {
+  "operation": {
+   "method": "POST",
+   "@type": "CreateResourceOperation",
+   "returns": "BookmarkCreated"
+  }
+ },
  "bookmarkShow": [
   {
-   "operation": [
-    {
-     "method": "DELETE",
-     "@type": "DeleteResourceOperation"
-    }
-   ],
+   "operation": {
+    "method": "DELETE",
+    "@type": "DeleteResourceOperation"
+   },
    "@id": "1.json",
    "@type": "BookmarkAction",
    "object": {
@@ -26,12 +31,10 @@
    }
   },
   {
-   "operation": [
-    {
-     "method": "DELETE",
-     "@type": "DeleteResourceOperation"
-    }
-   ],
+   "operation": {
+    "method": "DELETE",
+    "@type": "DeleteResourceOperation"
+   },
    "@id": "2.json",
    "@type": "BookmarkAction",
    "object": {
@@ -51,12 +54,10 @@
    }
   },
   {
-   "operation": [
-    {
-     "method": "DELETE",
-     "@type": "DeleteResourceOperation"
-    }
-   ],
+   "operation": {
+    "method": "DELETE",
+    "@type": "DeleteResourceOperation"
+   },
    "@id": "3.json",
    "@type": "BookmarkAction",
    "object": {
@@ -76,15 +77,5 @@
    }
   }
  ],
- "bookmarkCreate": {
-  "operation": [
-   {
-    "returns": "BookmarkCreated",
-    "method": "POST",
-    "@type": "CreateResourceOperation"
-   }
-  ]
- },
- "@id": "index.json",
  "@context": "../context.json"
 }

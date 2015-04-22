@@ -1,12 +1,15 @@
 {
- "operation": [
-  {
-   "method": "DELETE",
-   "@type": "DeleteResourceOperation"
-  }
- ],
+ "operation": {
+  "method": "DELETE",
+  "@type": "DeleteResourceOperation"
+ },
  "agent": {
   "operation": [
+   {
+    "method": "PUT",
+    "@type": "ReplaceResourceOperation",
+    "returns": "UserCreated"
+   },
    {
     "method": "DELETE",
     "@type": "DeleteResourceOperation"
@@ -20,13 +23,11 @@
   "@id": "index.json"
  },
  "bookmarkCreate": {
-  "operation": [
-   {
-    "returns": "BookmarkCreated",
-    "method": "POST",
-    "@type": "CreateResourceOperation"
-   }
-  ],
+  "operation": {
+   "method": "POST",
+   "@type": "CreateResourceOperation",
+   "returns": "BookmarkCreated"
+  },
   "@id": "created.json"
  },
  "@id": "3.json",
