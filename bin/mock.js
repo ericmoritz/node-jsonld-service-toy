@@ -6,12 +6,11 @@ const im = immutable.fromJS
 const Resources = require('../src/resources.js')
 const outPath = process.argv[2]
 const json = x => JSON.stringify(x, null, ' ')
-const writeJson = (fn, data) => {
-  const outFn = outPath + fn
-  console.log(outFn)
-  return Q.nfcall(fs.writeFile, outFn, json(data))
-}
-const mkdir = fn => Q.nfcall(fs.mkdir, outPath + fn)
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Mock data
+///////////////////////////////////////////////////////////////////////////////
 const user = im(
   {
     '@id': '1.json', 'name': 'Eric Moritz',
@@ -54,10 +53,15 @@ const bookmarks = [
   },  
 ]
 
-const trace = (x) => {
-  console.log(x)
-  return x
-}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Resource renders
+///////////////////////////////////////////////////////////////////////////////
+// This is where we need to add the URIs to the resources.
+// The URIs are specific to the environment they're rendered in
+// so the URIs have to be added at render time.
+
 const Context = Resources.Context().update( '@context', context => (
   im(context).merge(
     im({
@@ -67,14 +71,14 @@ const Context = Resources.Context().update( '@context', context => (
   )
 ))
 
-const index = Resources.Index(
+const Index = Resources.Index(
   im({
     '@id': 'index.json',
     'userCreate': {'@id': 'users/created.json'}
   })
 )
 
-const userCreated = Resources.UserCreated(
+const UserCreated = Resources.UserCreated(
   im({
     '@id': 'created.json',
     'bookmarkCreate': {'@id': '../bookmarks/created.json'},
@@ -82,19 +86,31 @@ const userCreated = Resources.UserCreated(
   })
 )
 
-const userResource = Resources.UserShown(user)
-const bookmarkCreated = Resources.BookmarkCreated(
+const UserResource = Resources.UserShown(user)
+const BookmarkCreated = Resources.BookmarkCreated(
   im({
     '@id': 'created.json',
     'bookmarkIndex': {'@id': 'index.json'}
   })
 )
-const bookmarkListShown = Resources.BookmarkListShown({'@id': 'index.json'}, bookmarks)
-const bookmarkShownResources = bookmarks.map(Resources.BookmarkShown)
+const BookmarkListShown = Resources.BookmarkListShown({'@id': 'index.json'}, bookmarks)
+const BookmarkShownResources = bookmarks.map(Resources.BookmarkShown)
+
+///////////////////////////////////////////////////////////////////////////////
+// Output
+///////////////////////////////////////////////////////////////////////////////
+const writeJson = (fn, data) => {
+  const outFn = outPath + fn
+  console.log(outFn)
+  return Q.nfcall(fs.writeFile, outFn, json(data))
+}
+
 const relativeTo = (path, fn) => (
   // This could be better
   (path.indexOf("/") > 0 ? "../" : "") + fn
 )
+
+const mkdir = fn => Q.nfcall(fs.mkdir, outPath + fn)
 
 const writeJsonLD = (path, map) => writeJson(
   path,
@@ -109,12 +125,12 @@ Q.all([
 ]).all([
   writeJson("context.json", Context),
   writeJsonLD("vocab.json", Resources.Vocab()),
-  writeJsonLD("index.json", index),
-  writeJsonLD("users/created.json", userCreated),
-  writeJsonLD("users/1.json", userResource),
-  writeJsonLD("bookmarks/index.json", bookmarkListShown),
-  writeJsonLD("bookmarks/created.json", bookmarkCreated),
-  Q.all(bookmarkShownResources.map(
+  writeJsonLD("index.json", Index),
+  writeJsonLD("users/created.json", UserCreated),
+  writeJsonLD("users/1.json", UserResource),
+  writeJsonLD("bookmarks/index.json", BookmarkListShown),
+  writeJsonLD("bookmarks/created.json", BookmarkCreated),
+  Q.all(BookmarkShownResources.map(
     (r) => writeJsonLD("bookmarks/" + r.get('@id'), r)
   ))
 ])
