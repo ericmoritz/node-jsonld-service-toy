@@ -1,11 +1,11 @@
 //  This is a side-effect free zone!
 
-const _ = require('lodash');
 const Immutable = require('immutable')
 const Map = Immutable.Map
 const im = Immutable.fromJS
 const constants = require('./constants')
-const hydra = require('./hydra-utils')
+const hydra = require('hydra-view')
+
 const operation = hydra.operation;
 const link = hydra.link;
 const resource = hydra.resource;
@@ -14,11 +14,18 @@ const trace = require('./trace')
 
 // What resources look like as links or full resources
 
+const UserCreatedOperation = {
+  'returns': 'UserCreated',
+  'expects': {
+    'supportedProperty': [
+      {'@id': 'name', 'required': true}
+    ]
+  }
+}
+
 const ResourceBases = {
   UserCreated: resource(
-    operation.POST({
-      'returns': 'UserCreated'
-    })
+    operation.POST(UserCreatedOperation)
   ),
 
   BookmarkCreated: resource(
@@ -33,9 +40,7 @@ const ResourceBases = {
 
   UserShown: resource(
     link.union(
-      operation.PUT({
-        'returns': 'UserCreated'
-      }),
+      operation.PUT(UserCreatedOperation),
       operation.DELETE()
     )
   )
@@ -55,6 +60,11 @@ const Links = {
     bookmarks.map(
       b => resource(ResourceBases.BookmarkShown, b)
     )
+  ),
+
+  userShow: link(
+    'userShow',
+    ResourceBases.UserShown
   )
 }
 
@@ -76,8 +86,10 @@ const Resources = {
     ResourceBases.UserCreated,
     Links.bookmarkIndex,
     Links.bookmarkCreate,
+    Links.userShow,
     x
   ),
+
 
   BookmarkCreated: (x) => resource(
     ResourceBases.BookmarkCreated,
